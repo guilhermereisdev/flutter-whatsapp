@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_whatsapp/cadastro.dart';
+import 'package:flutter_whatsapp/route_generator.dart';
 import 'home.dart';
 import 'model/usuario.dart';
 
@@ -52,8 +53,9 @@ class _LoginState extends State<Login> {
         .signInWithEmailAndPassword(
             email: usuario.email, password: usuario.senha)
         .then((firebaseUser) {
-      Navigator.pushReplacement(
-          context, MaterialPageRoute(builder: (context) => const Home()));
+      Navigator.pushReplacementNamed(context, RouteGenerator.rotaHome);
+      /*Navigator.pushReplacement(
+          context, MaterialPageRoute(builder: (context) => const Home()));*/
     }).catchError((error) {
       setState(() {
         _mensagemErro =
@@ -67,8 +69,9 @@ class _LoginState extends State<Login> {
     //auth.signOut();
     User? usuarioLogado = await auth.currentUser;
     if (usuarioLogado != null) {
-      Navigator.pushReplacement(
-          context, MaterialPageRoute(builder: (context) => Home()));
+      Navigator.pushReplacementNamed(context, RouteGenerator.rotaHome);
+      /*Navigator.pushReplacement(
+          context, MaterialPageRoute(builder: (context) => Home()));*/
     }
   }
 

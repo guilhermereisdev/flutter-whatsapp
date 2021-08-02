@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter_whatsapp/login.dart';
+import 'package:flutter_whatsapp/route_generator.dart';
 import 'package:flutter_whatsapp/telas/aba_contato.dart';
 import 'package:flutter_whatsapp/telas/aba_conversas.dart';
 
@@ -12,11 +15,34 @@ class Home extends StatefulWidget {
 
 class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
   late TabController _tabController;
+  List<String> itensMenu = ["Configurações", "Deslogar"];
 
   @override
   void initState() {
     super.initState();
     _tabController = TabController(length: 2, vsync: this);
+  }
+
+  _escolhaMenuItem(String itemEscolhido) {
+    //print("item escolhido: " + itemEscolhido);
+
+    switch (itemEscolhido) {
+      case "Configurações":
+        Navigator.pushNamed(context, RouteGenerator.rotaConfiguracoes);
+        break;
+      case "Deslogar":
+        _deslogarUsuario();
+        break;
+    }
+  }
+
+  _deslogarUsuario() async {
+    FirebaseAuth auth = FirebaseAuth.instance;
+    await auth.signOut();
+
+    Navigator.pushReplacementNamed(context, RouteGenerator.rotaLogin);
+    /*Navigator.pushReplacement(
+        context, MaterialPageRoute(builder: (context) => Login()));*/
   }
 
   @override
@@ -37,6 +63,19 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
             Tab(text: "Contatos"),
           ],
         ),
+        actions: [
+          PopupMenuButton<String>(
+            onSelected: _escolhaMenuItem,
+            itemBuilder: (context) {
+              return itensMenu.map((String item) {
+                return PopupMenuItem<String>(
+                  value: item,
+                  child: Text(item),
+                );
+              }).toList();
+            },
+          ),
+        ],
       ),
       body: TabBarView(
         controller: _tabController,
