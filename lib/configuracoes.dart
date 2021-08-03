@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'dart:io';
 
 class Configuracoes extends StatefulWidget {
@@ -12,6 +15,9 @@ class Configuracoes extends StatefulWidget {
 class _ConfiguracoesState extends State<Configuracoes> {
   TextEditingController _controllerNome = TextEditingController();
   late File _imagem;
+  late String _idUsuarioLogado;
+  bool _subindoImagem = false;
+  String? _urlImagemRecuperada;
 
   Future _recuperarImagem(String origemImagem) async {
     ImagePicker _picker = ImagePicker();
@@ -31,7 +37,86 @@ class _ConfiguracoesState extends State<Configuracoes> {
     }
     setState(() {
       _imagem = File(imagemSelecionada.path);
+      if (_imagem != null) {
+        _subindoImagem = true;
+        _uploadImagem();
+      }
     });
+  }
+
+  Future _uploadImagem() async {
+    firebase_storage.FirebaseStorage storage =
+        firebase_storage.FirebaseStorage.instance;
+    firebase_storage.Reference pastaRaiz = storage.ref();
+    firebase_storage.Reference arquivo =
+        pastaRaiz.child("perfil").child(_idUsuarioLogado + "_foto_perfil.jpg");
+
+    // upload da imagem
+    firebase_storage.UploadTask task = arquivo.putFile(_imagem);
+
+    // controlar progresso do upload
+    task.snapshotEvents.listen((firebase_storage.TaskSnapshot taskSnapshot) {
+      if (taskSnapshot.state == firebase_storage.TaskState.running) {
+        setState(() {
+          _subindoImagem = true;
+        });
+      } else if (taskSnapshot.state == firebase_storage.TaskState.success) {
+        setState(() {
+          _subindoImagem = false;
+        });
+      }
+    });
+
+    // recuperar url da imagem
+    task.then((firebase_storage.TaskSnapshot taskSnapshot) {
+      _recuperarUrlImagem(taskSnapshot);
+    });
+  }
+
+  Future _recuperarUrlImagem(firebase_storage.TaskSnapshot taskSnapshot) async {
+    String url = await taskSnapshot.ref.getDownloadURL();
+    _atualizarUrlImagemFirestore(url);
+    setState(() {
+      _urlImagemRecuperada = url;
+    });
+  }
+
+  _atualizarUrlImagemFirestore(String url) {
+    FirebaseFirestore db = FirebaseFirestore.instance;
+    Map<String, dynamic> dadosAtualizar = {"urlImagem": url};
+
+    db.collection("usuarios").doc(_idUsuarioLogado).update(dadosAtualizar);
+  }
+
+  _atualizarNomeFirestore() {
+    String nome = _controllerNome.text;
+    FirebaseFirestore db = FirebaseFirestore.instance;
+    Map<String, dynamic> dadosAtualizar = {"nome": nome};
+
+    db.collection("usuarios").doc(_idUsuarioLogado).update(dadosAtualizar);
+  }
+
+  _recuperarDadosUsuario() async {
+    FirebaseAuth auth = FirebaseAuth.instance;
+    User usuarioLogado = await auth.currentUser!;
+    _idUsuarioLogado = usuarioLogado.uid;
+
+    FirebaseFirestore db = FirebaseFirestore.instance;
+    DocumentSnapshot snapshot =
+        await db.collection("usuarios").doc(_idUsuarioLogado).get();
+
+    var dados = snapshot.data();
+    _controllerNome.text = (dados as dynamic)["nome"];
+
+    if (dados["urlImagem"] != null) {
+      _urlImagemRecuperada = dados["urlImagem"];
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _recuperarDadosUsuario();
   }
 
   @override
@@ -39,29 +124,35 @@ class _ConfiguracoesState extends State<Configuracoes> {
     return Scaffold(
       appBar: AppBar(title: Text("Configurações")),
       body: Container(
-        padding: EdgeInsets.all(16),
+        padding: const EdgeInsets.all(16),
         child: Center(
           child: SingleChildScrollView(
             child: Column(
               children: [
-                // Carregando
-                const CircleAvatar(
+                Container(
+                  padding: const EdgeInsets.all(16),
+                  child: _subindoImagem
+                      ? const CircularProgressIndicator()
+                      : Container(),
+                ),
+                CircleAvatar(
                   radius: 100,
                   backgroundColor: Colors.grey,
-                  backgroundImage: NetworkImage(
-                      "https://firebasestorage.googleapis.com/v0/b/whatsapp-flutter-1.appspot.com/o/perfil%2Fperfil5.jpg?alt=media&token=70077d23-3d20-42ae-8656-2021d7fde3f8"),
+                  backgroundImage: _urlImagemRecuperada != null
+                      ? NetworkImage(_urlImagemRecuperada as String)
+                      : null,
                 ),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     TextButton(
-                      child: Text("Câmera"),
+                      child: const Text("Câmera"),
                       onPressed: () {
                         _recuperarImagem("camera");
                       },
                     ),
                     TextButton(
-                      child: Text("Galeria"),
+                      child: const Text("Galeria"),
                       onPressed: () {
                         _recuperarImagem("galeria");
                       },
@@ -83,12 +174,17 @@ class _ConfiguracoesState extends State<Configuracoes> {
                         fillColor: Colors.white,
                         border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(32))),
+                    /*onChanged: (texto) {
+                      _atualizarNomeFirestore(texto);
+                    },*/
                   ),
                 ),
                 Padding(
                   padding: const EdgeInsets.only(top: 16, bottom: 10),
                   child: RaisedButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      _atualizarNomeFirestore();
+                    },
                     child: const Text("Salvar",
                         style: TextStyle(color: Colors.white, fontSize: 20)),
                     color: Colors.green,

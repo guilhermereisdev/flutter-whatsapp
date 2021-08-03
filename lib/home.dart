@@ -3,7 +3,7 @@ import 'package:flutter/widgets.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_whatsapp/login.dart';
 import 'package:flutter_whatsapp/route_generator.dart';
-import 'package:flutter_whatsapp/telas/aba_contato.dart';
+import 'package:flutter_whatsapp/telas/aba_contatos.dart';
 import 'package:flutter_whatsapp/telas/aba_conversas.dart';
 
 class Home extends StatefulWidget {

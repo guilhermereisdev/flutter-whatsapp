@@ -110,13 +110,14 @@ class _CadastroState extends State<Cadastro> {
                     keyboardType: TextInputType.text,
                     style: const TextStyle(fontSize: 20),
                     decoration: InputDecoration(
-                        contentPadding:
-                            const EdgeInsets.fromLTRB(32, 16, 32, 16),
-                        hintText: "Nome",
-                        filled: true,
-                        fillColor: Colors.white,
-                        border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(32))),
+                      contentPadding: const EdgeInsets.fromLTRB(32, 16, 32, 16),
+                      hintText: "Nome",
+                      filled: true,
+                      fillColor: Colors.white,
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(32),
+                      ),
+                    ),
                   ),
                 ),
                 Padding(
