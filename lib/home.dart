@@ -17,9 +17,21 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
   late TabController _tabController;
   List<String> itensMenu = ["Configurações", "Deslogar"];
 
+  Future _verificarUsuarioLogado() async {
+    FirebaseAuth auth = FirebaseAuth.instance;
+    //auth.signOut();
+    User? usuarioLogado = await auth.currentUser;
+    if (usuarioLogado == null) {
+      Navigator.pushReplacementNamed(context, RouteGenerator.rotaLogin);
+      /*Navigator.pushReplacement(
+          context, MaterialPageRoute(builder: (context) => Home()));*/
+    }
+  }
+
   @override
   void initState() {
     super.initState();
+    _verificarUsuarioLogado();
     _tabController = TabController(length: 2, vsync: this);
   }
 
