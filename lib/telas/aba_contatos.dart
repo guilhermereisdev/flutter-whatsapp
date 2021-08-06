@@ -54,6 +54,7 @@ class _AbaContatosState extends State<AbaContatos> {
 
   @override
   Widget build(BuildContext context) {
+    _recuperarDadosUsuario();
     return FutureBuilder<List<Usuario>>(
       future: _recuperarContatos(),
       builder: (context, snapshot) {
@@ -72,7 +73,7 @@ class _AbaContatosState extends State<AbaContatos> {
           case ConnectionState.active:
           case ConnectionState.done:
             return ListView.builder(
-              itemCount: snapshot.data!.length,
+              itemCount: snapshot.data != null ? snapshot.data!.length : 0,
               itemBuilder: (_, indice) {
                 List<Usuario>? listaItens = snapshot.data;
                 Usuario usuario = listaItens![indice];

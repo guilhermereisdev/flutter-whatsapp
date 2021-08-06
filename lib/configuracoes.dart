@@ -17,7 +17,7 @@ class _ConfiguracoesState extends State<Configuracoes> {
   late File _imagem;
   late String _idUsuarioLogado;
   bool _subindoImagem = false;
-  String? _urlImagemRecuperada;
+  late String _urlImagemRecuperada = "";
 
   Future _recuperarImagem(String origemImagem) async {
     ImagePicker _picker = ImagePicker();
@@ -94,14 +94,15 @@ class _ConfiguracoesState extends State<Configuracoes> {
     Map<String, dynamic> dadosAtualizar = {"nome": nome};
 
     db.collection("usuarios").doc(_idUsuarioLogado).update(dadosAtualizar);
+    Navigator.pop(context);
   }
 
   _recuperarDadosUsuario() async {
     FirebaseAuth auth = FirebaseAuth.instance;
+    FirebaseFirestore db = FirebaseFirestore.instance;
     User usuarioLogado = await auth.currentUser!;
     _idUsuarioLogado = usuarioLogado.uid;
 
-    FirebaseFirestore db = FirebaseFirestore.instance;
     DocumentSnapshot snapshot =
         await db.collection("usuarios").doc(_idUsuarioLogado).get();
 
@@ -109,20 +110,22 @@ class _ConfiguracoesState extends State<Configuracoes> {
     _controllerNome.text = (dados as dynamic)["nome"];
 
     if (dados["urlImagem"] != null) {
-      _urlImagemRecuperada = dados["urlImagem"];
+      setState(() {
+        _urlImagemRecuperada = (dados as dynamic)["urlImagem"];
+      });
     }
   }
 
   @override
   void initState() {
-    super.initState();
     _recuperarDadosUsuario();
+    super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text("Configurações")),
+      appBar: AppBar(title: const Text("Configurações")),
       body: Container(
         padding: const EdgeInsets.all(16),
         child: Center(
@@ -139,7 +142,7 @@ class _ConfiguracoesState extends State<Configuracoes> {
                   radius: 100,
                   backgroundColor: Colors.grey,
                   backgroundImage: _urlImagemRecuperada != null
-                      ? NetworkImage(_urlImagemRecuperada as String)
+                      ? NetworkImage(_urlImagemRecuperada)
                       : null,
                 ),
                 Row(

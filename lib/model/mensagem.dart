@@ -5,6 +5,7 @@ class Mensagem {
 
   // define o tipo da mensagem, que pode ser "texto" ou "imagem"
   late String _tipo;
+  late String _data;
 
   Mensagem();
 
@@ -13,9 +14,16 @@ class Mensagem {
       "idUsuario": this.idUsuario,
       "mensagem": this.mensagem,
       "urlImagem": this.urlImagem,
-      "tipo": this.tipo
+      "tipo": this.tipo,
+      "data": this.data,
     };
     return map;
+  }
+
+  String get data => _data;
+
+  set data(String value) {
+    _data = value;
   }
 
   String get tipo => _tipo;

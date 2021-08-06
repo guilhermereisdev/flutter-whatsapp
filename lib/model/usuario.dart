@@ -8,7 +8,7 @@ class Usuario {
   Usuario();
 
   Map<String, dynamic> toMap() {
-    Map<String, dynamic> map = {"nome": this.nome, "email": this.email};
+    Map<String, dynamic> map = {"nome": this.nome, "email": this.email , "urlImagem": this.urlImagem};
     return map;
   }
 

@@ -57,6 +57,9 @@ class _CadastroState extends State<Cadastro> {
 
   _cadastrarUsuario(Usuario usuario) {
     FirebaseAuth auth = FirebaseAuth.instance;
+    // adiciona foto padrão de avatar do novo personagem para não ocorrer erro
+    usuario.urlImagem =
+        "https://firebasestorage.googleapis.com/v0/b/whatsapp-flutter-1.appspot.com/o/perfil%2Fnewuseravatar.png?alt=media&token=ffc6fed5-b7f1-48c8-b4ed-49e1c524ce26";
     auth
         .createUserWithEmailAndPassword(
             email: usuario.email, password: usuario.senha)
