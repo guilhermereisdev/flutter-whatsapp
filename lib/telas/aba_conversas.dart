@@ -18,7 +18,6 @@ class AbaConversas extends StatefulWidget {
 }
 
 class _AbaContatosState extends State<AbaConversas> {
-  List<Conversa> _listaConversas = [];
   final _controller = StreamController<QuerySnapshot>.broadcast();
   FirebaseFirestore db = FirebaseFirestore.instance;
   late String _idUsuarioLogado;
@@ -27,13 +26,6 @@ class _AbaContatosState extends State<AbaConversas> {
   void initState() {
     super.initState();
     _recuperarDadosUsuario();
-    Conversa conversa = Conversa();
-    conversa.nome = "Ana Clara";
-    conversa.mensagem = "Olá!";
-    conversa.caminhoFoto =
-        "https://firebasestorage.googleapis.com/v0/b/whatsapp-flutter-1.appspot.com/o/perfil%2Fperfil1.jpg?alt=media&token=bca891fa-1f01-4e48-a9f5-be270fd59173";
-
-    _listaConversas.add(conversa);
   }
 
   /*Stream<QuerySnapshot>*/
@@ -42,6 +34,7 @@ class _AbaContatosState extends State<AbaConversas> {
         .collection("conversas")
         .doc(_idUsuarioLogado)
         .collection("ultima_conversa")
+        .orderBy("data", descending: true)
         .snapshots();
     stream.listen((dados) {
       _controller.add(dados);
@@ -60,7 +53,7 @@ class _AbaContatosState extends State<AbaConversas> {
   @override
   void dispose() {
     super.dispose();
-    _controller.close();
+    //_controller.close();
   }
 
   @override
@@ -99,8 +92,7 @@ class _AbaContatosState extends State<AbaConversas> {
               }
 
               return ListView.builder(
-                itemCount: _listaConversas.length,
-                //itemCount: querySnapshot.docs.length,
+                itemCount: querySnapshot.docs.length,
                 itemBuilder: (context, indice) {
                   List<DocumentSnapshot> conversas =
                       querySnapshot.docs.toList();

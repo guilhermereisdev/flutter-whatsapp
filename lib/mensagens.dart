@@ -67,6 +67,7 @@ class _MensagensState extends State<Mensagens> {
     cRemetente.nome = widget.contato.nome;
     cRemetente.caminhoFoto = widget.contato.urlImagem;
     cRemetente.tipoMensagem = msg.tipo;
+    cRemetente.data = msg.data;
     cRemetente.salvar();
 
     // salvar conversa destinatário
@@ -80,6 +81,7 @@ class _MensagensState extends State<Mensagens> {
     cDestinatario.caminhoFoto = _usuarioLogado2.urlImagem;
 
     cDestinatario.tipoMensagem = msg.tipo;
+    cDestinatario.data = msg.data;
     cDestinatario.salvar();
   }
 

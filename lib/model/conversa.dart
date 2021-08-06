@@ -7,12 +7,14 @@ class Conversa {
   late String _mensagem;
   late String _caminhoFoto;
   late String _tipoMensagem; // texto ou imagem
+  late String _data;
 
   Conversa();
 
   salvar() async {
     FirebaseFirestore db = FirebaseFirestore.instance;
-    await db.collection("conversas")
+    await db
+        .collection("conversas")
         .doc(this.idRemetente)
         .collection("ultima_conversa")
         .doc(this.idDestinatario)
@@ -27,8 +29,15 @@ class Conversa {
       "mensagem": this.mensagem,
       "caminhoFoto": this.caminhoFoto,
       "tipoMensagem": this.tipoMensagem,
+      "data": this.data,
     };
     return map;
+  }
+
+  String get data => _data;
+
+  set data(String value) {
+    _data = value;
   }
 
   String get idRemetente => _idRemetente;

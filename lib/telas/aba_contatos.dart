@@ -36,6 +36,9 @@ class _AbaContatosState extends State<AbaContatos> {
       listaUsuarios.add(usuario);
     }
 
+    // ordena a lista alfabeticamente de acordo com o nome
+    listaUsuarios.sort((a, b) => a.nome.compareTo(b.nome));
+
     return listaUsuarios;
   }
 
