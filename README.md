@@ -26,5 +26,5 @@ Um clone do aplicativo WhatsApp feito em Flutter. Pode ser executado em disposit
 
 #### Capturas de tela
 
-![1](C:\Users\guilh\AndroidStudioProjects\flutter_whatsapp\screenshots\1.png) ![2](C:\Users\guilh\AndroidStudioProjects\flutter_whatsapp\screenshots\2.png) ![3](C:\Users\guilh\AndroidStudioProjects\flutter_whatsapp\screenshots\3.png) ![4](C:\Users\guilh\AndroidStudioProjects\flutter_whatsapp\screenshots\4.png) ![5](C:\Users\guilh\AndroidStudioProjects\flutter_whatsapp\screenshots\5.png) ![6](C:\Users\guilh\AndroidStudioProjects\flutter_whatsapp\screenshots\6.png) ![7](C:\Users\guilh\AndroidStudioProjects\flutter_whatsapp\screenshots\7.png)
+![1](screenshots\1.png) ![2](screenshots\2.png) ![3](screenshots\3.png) ![4](screenshots\4.png) ![5](screenshots\5.png) ![6](screenshots\6.png) ![7](screenshots\7.png)
 
