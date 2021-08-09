@@ -26,7 +26,7 @@
 20        android:debuggable="true"
 21        android:icon="@mipmap/ic_launcher"
 21-->C:\Users\guilh\AndroidStudioProjects\flutter_whatsapp\android\app\src\main\AndroidManifest.xml:5:9-43
-22        android:label="flutter_whatsapp" >
+22        android:label="WhatsApp Flutter" >
 22-->C:\Users\guilh\AndroidStudioProjects\flutter_whatsapp\android\app\src\main\AndroidManifest.xml:4:9-41
 23        <activity
 23-->C:\Users\guilh\AndroidStudioProjects\flutter_whatsapp\android\app\src\main\AndroidManifest.xml:6:9-34:20
